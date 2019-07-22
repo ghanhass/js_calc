@@ -84,6 +84,15 @@
             background-repeat: no-repeat !important;
             background-position: center !important;
         }
+        .graph-loading-icon{
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            opacity: 0.25;
+            margin: auto;
+        }
         </style>
 
     </head>
@@ -163,8 +172,10 @@
         }
 
         function drawGraph(){
+            let graphLoadingImg = document.querySelector(".graph-loading-icon");
             let myCanvas = document.getElementById("graph-canvas")
             let ctx = myCanvas.getContext("2d");
+            graphLoadingImg.classList.remove("hide");
             initCanvasGraph();
 
             let initEq=document.getElementById('display-graph').value;
@@ -206,7 +217,6 @@
                         while(newEq.indexOf('X') !== -1){
                             newEq=newEq.replace("X",i);                       
                         }
-
                         var result="not a number";
                         try {
                             eval(document.getElementById('funct').value+" "+"result="+newEq);//evaluate functions then equation
@@ -233,7 +243,7 @@
                             ctx.lineTo(i, parseFloat(result));
                           }
                           ctx.stroke();
-
+                          //console.log(i, " => ", result);
                           primResult = result;
                         }
                     }
@@ -261,9 +271,6 @@
                         if(result !=='Error.'){
                             primResult = (primResult === undefined)? result : primResult;
                           if(i == -0.000001){
-          /*                  if((parseFloat(result)) * (1/(i-0.01))<0){
-        ctx.moveTo(i, -(1/i));
-       }*/
                               ctx.moveTo(i, parseFloat(result));
                           }
 
@@ -273,14 +280,14 @@
                           else{
                             ctx.lineTo(i, parseFloat(result));
                           }
-                          
-                              ctx.stroke()
+                          //console.log(i, " => ", result);
+                          ctx.stroke()
                           primResult = result;
                         }
                     }
                     
                 }
-
+                graphLoadingImg.classList.add("hide");
         }
 
         function removewarning() {
@@ -305,12 +312,12 @@
                 if(!window.isCartesianGraph){
                     ctx.translate(parseInt(myCanvas.width)/2, parseInt(myCanvas.height)/2);
                     ctx.scale(1,-1);
-                    ctx.transform(10, 0, 0, 10, 0, 0);
+                    ctx.transform(5, 0, 0, 5, 0, 0);
                     window.isCartesianGraph = true;
                 }
 
                 ctx.fillStyle = '#FFFFFF';
-                ctx.strokeStyle = '#333333'
+                ctx.strokeStyle = '#222222'
                 ctx.lineWidth = '0.02';
                 ctx.fillRect(-parseInt(myCanvas.width)/2, -parseInt(myCanvas.height)/2, parseInt(myCanvas.width), parseInt(myCanvas.height));
                             
@@ -360,7 +367,9 @@ function pyth(a,b) {
             <input type="text" value="0" id="display" style="text-align: right;font-size:20pt;margin: 5px 0px;" >
             </div>
             <div style="display: flex;flex-direction: column;align-items: center;width: 100%;" id="graph-mode-area" class='hide'>
-                <div>
+                <div style='position:relation'>
+                    <img class="graph-loading-icon hide" 
+                    src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAMAAABHPGVmAAAC/VBMVEUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADmnzsbAAAAAXRSTlMAQObYZgAAAAFiS0dEAIgFHUgAAAAJcEhZcwAAC5QAAAuUAXfttvQAAAAHdElNRQfjBxYKAiMGkIH5AAABzUlEQVRo3u1ZO08DMQy+387GwsLKhFQ2WBCvjYXOSAjBgGABwYRAfahSm4hC6XG+y8OO7aJW/qZU8eevVhLHzlWVwWAwGNYDpx7iSlzBhyGocOHjGMlIOJ8BX+LW5zHWWQvJYKbA0xDMTcDcnUgYZQYUjV7U5oWpgqSPOCp4bm15pKfR2OaFGjrmhSSGiubfWpJKgv8gLkvZMirfaitR2aBQKkKK0A6FGy+Gz77o8vyJwHWao4tc2hm2TGmQZksVIAnyTKzMiXMFi6koteGXrbJgnsU1ZtUeO5bXIBO4/B04dpWTqq6WI5LK3OwyIjIfHXYquHpIUGnZNX/+DHdqkee2hSOK+IBIazcFLBxRxHdc1BO78VgdUcTfQxeNhTgBjsB/6uMXPrB34uegbOOGTkHirH2WnY6DP5dTRG4qPYOkZpLfziDyEjczonKfSPuXyxZj/oWFyOFC/XLah0SxknXhhVT+v1Ll1/+E3n/bGiaayPnmhEJ8LFiBCuNCpRGUVZgPXg5h+1BcOhc8D26pPXSKPaceR20eBR+G9R6fO/0qmHsHUzcSh1/360YfITHkZ7KB/keab1wnFN4UErPeh7MF9lsCT5XBYDAY1gBfRjQaR6IrPnsAAAAASUVORK5CYII=">
                     <canvas width="404" height="227" id="graph-canvas" style="border: 1px solid #999999;border-radius: 5px;background: #FFFFFF;"></canvas>
                 </div>
                 <input type="text" value="0" id="display-graph" style="text-align: right;font-size:20pt;margin: 5px 0px;" >
